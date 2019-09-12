@@ -6,19 +6,11 @@ html, body {
 }
 
 body {
-    background: url(/images/judge0_background.png) no-repeat center center fixed;
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    background-size: cover;
+    background: white;
 }
 
 .ui[class*="left action"].input>.dropdown {
     border-radius: 0 .28571429rem .28571429rem 0;
-}
-
-.ui.selection.dropdown {
-    width: 300px;
 }
 
 .lm_header .lm_tab {
@@ -36,7 +28,6 @@ body {
 #site-navigation {
     border-radius: 0;
     margin: 0;
-    background: #1e1e1e;
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     height: 45px;
 }
@@ -68,7 +59,7 @@ body {
 }
 
 #site-footer, #status-line {
-    background-color: #0E6EB8;
+    background-color: #f2711c;
     bottom: 0;
     font-family: "Droid Sans Mono", monospace, monospace, "Droid Sans Fallback";
     font-size: 13px;
@@ -79,23 +70,23 @@ body {
 }
 
 #site-footer {
-    color: #41a5f1;
+    color: #f8b487;
     left: 0;
     text-align: center;
     width: 100%;
 }
 
 #site-footer a {
-    color: #41a5f1;
+    color: #f8b487;
     font-weight: bold;
 }
 
 #site-footer a:hover {
-    color: #a0d2f8;
+    color: white;
 }
 
 #status-line {
-    color: #fff;
+    color: #f8b487;
     float: right;
     right: 0;
     text-align: right;
@@ -104,24 +95,4 @@ body {
 
 .left-padding {
     padding-left: 16px !important;
-}
-
-.blink {
-    animation: blinker 1s linear infinite;
-}
-
-@keyframes blinker {
-    50% {
-        background: #FFD700;
-    }
-}
-
-.dot {
-    background: #0E6EB8;
-    position: absolute;
-    border-radius: 50px;
-    width: 5px;
-    height: 5px;
-    right: 7.5px;
-    top: 7.5px;
 }
