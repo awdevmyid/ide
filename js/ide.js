@@ -140,7 +140,8 @@ function save() {
         source_code: encode(sourceEditor.getValue()),
         language_id: $selectLanguage.val(),
         stdin: encode(stdinEditor.getValue()),
-        stdout: encode(stdoutEditor.getValue())
+        stdout: encode(stdoutEditor.getValue()),
+        status_line: encode($statusLine.html())
     });
     var filename = "judge0-ide.json";
     var data = {
@@ -181,6 +182,7 @@ function loadSavedSource() {
             $selectLanguage.dropdown("set selected", data["language_id"]);
             stdinEditor.setValue(decode(data["stdin"]));
             stdoutEditor.setValue(decode(data["stdout"]));
+            $statusLine.html(decode(data["status_line"]));
             changeEditorLanguage();
         },
         error: function (jqXHR, textStatus, errorThrown) {
