@@ -126,7 +126,7 @@ function handleResult(data) {
 
     $statusLine.html(`${status.description}, ${time}, ${memory}`);
 
-    stdoutEditor.setValue(stdout || stderr);
+    stdoutEditor.setValue([stdout, stderr].join(""));
 
     $runBtn.removeClass("loading");
 }
