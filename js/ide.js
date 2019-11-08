@@ -203,8 +203,10 @@ function run() {
 
     stdoutEditor.setValue("");
 
-    var sourceValue = encode(sourceEditor.getValue());
-    var stdinValue = encode(stdinEditor.getValue());
+    // Without this "replace" code https://code.stemalica.com/?BSu9 wouldn't work.
+    // That code was copied from PPT file into editor on Windows.
+    var sourceValue = encode(sourceEditor.getValue().replace(/\r\n/g, "\n").replace(/ /g, " "));
+    var stdinValue = encode(stdinEditor.getValue().replace(/\r\n/g, "\n").replace(/ /g, " "));
     var languageId = $selectLanguage.val();
     var data = {
         source_code: sourceValue,
