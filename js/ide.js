@@ -362,9 +362,9 @@ $(document).ready(function () {
 var pythonSource = "print(\"Bok Stemalica!\")\n";
 
 var sources = {
-    34: pythonSource
+    71: pythonSource
 };
 
 var fileNames = {
-    34: "main.py"
+    71: "main.py"
 };
