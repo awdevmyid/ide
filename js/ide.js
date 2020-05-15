@@ -1,4 +1,4 @@
-var apiUrl = localStorageGetItem("api-url") || "https://preview.api.judge0.com";
+var apiUrl = localStorageGetItem("api-url") || "https://api.judge0.com";
 var wait = localStorageGetItem("wait") || false;
 var pbUrl = "https://pb.judge0.com";
 var check_timeout = 200;
