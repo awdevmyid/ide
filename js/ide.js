@@ -1,4 +1,4 @@
-var apiUrl = localStorageGetItem("api-url") || "https://api.judge0.com";
+var apiUrl = localStorageGetItem("api-url") || "https://api.judge0.com/secure";
 var wait = localStorageGetItem("wait") || false;
 var pbUrl = "https://pb.judge0.com";
 var check_timeout = 200;
@@ -220,6 +220,9 @@ function run() {
         type: "POST",
         async: true,
         contentType: "application/json",
+        xhrFields: {
+            withCredentials: true
+        },
         data: JSON.stringify(data),
         success: function (data, textStatus, jqXHR) {
             console.log(`Your submission token is: ${data.token}`);
