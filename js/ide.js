@@ -1,6 +1,6 @@
-var apiUrl = localStorageGetItem("api-url") || "https://secure.judge0.com/standard";
+var apiUrl = localStorageGetItem("api-url") || "https://secure.stemalica.com/standard";
 var wait = localStorageGetItem("wait") || false;
-var pbUrl = "https://pb.judge0.com";
+var pbUrl = "https://pb.stemalica.com";
 var check_timeout = 200;
 
 var layout;
@@ -226,9 +226,6 @@ function run() {
         type: "POST",
         async: true,
         contentType: "application/json",
-        xhrFields: {
-            withCredentials: true
-        },
         data: JSON.stringify(data),
         xhrFields: {
             withCredentials: true
