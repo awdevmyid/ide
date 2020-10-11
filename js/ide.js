@@ -157,6 +157,9 @@ function save() {
             "Accept": "application/json"
         },
         data: data,
+        xhrFields: {
+            withCredentials: true
+        },
         success: function (data, textStatus, jqXHR) {
             if (getIdFromURI() != data["short"]) {
                 window.history.replaceState(null, null, location.origin + location.pathname + "?" + data["short"]);
@@ -174,23 +177,26 @@ function downloadSource() {
 }
 
 function loadSavedSource() {
-    $.ajax({
-        url: pbUrl + "/" + getIdFromURI() + ".json",
-        type: "GET",
-        success: function (data, textStatus, jqXHR) {
-            sourceEditor.setValue(decode(data["source_code"]));
-            $selectLanguage.dropdown("set selected", data["language_id"]);
-            stdinEditor.setValue(decode(data["stdin"]));
-            stdoutEditor.setValue(decode(data["stdout"]));
-            $statusLine.html(decode(data["status_line"]));
-            changeEditorLanguage();
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-            showError("Greška", "Program nije pronađen!");
-            window.history.replaceState(null, null, location.origin + location.pathname);
-            loadRandomLanguage();
-        }
-    });
+    var snipped_id = getIdFromURI();
+    if (snipped_id.length == 4) {
+        $.ajax({
+            url: pbUrl + "/" + snipped_id + ".json",
+            type: "GET",
+            success: function (data, textStatus, jqXHR) {
+                sourceEditor.setValue(decode(data["source_code"]));
+                $selectLanguage.dropdown("set selected", data["language_id"]);
+                stdinEditor.setValue(decode(data["stdin"]));
+                stdoutEditor.setValue(decode(data["stdout"]));
+                $statusLine.html(decode(data["status_line"]));
+                changeEditorLanguage();
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                showError("Greška", "Program nije pronađen!");
+                window.history.replaceState(null, null, location.origin + location.pathname);
+                loadRandomLanguage();
+            }
+        });
+    }
 }
 
 function run() {
@@ -224,6 +230,9 @@ function run() {
             withCredentials: true
         },
         data: JSON.stringify(data),
+        xhrFields: {
+            withCredentials: true
+        },
         success: function (data, textStatus, jqXHR) {
             console.log(`Your submission token is: ${data.token}`);
             if (wait == true) {
