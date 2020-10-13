@@ -621,7 +621,7 @@ $(document).ready(function () {
             alert(`Submission wait is ${wait ? "ON. Enjoy" : "OFF"}.`);
         } else if (event.ctrlKey && keyCode == 83) { // Ctrl+S
             e.preventDefault();
-            // save();
+            save();
         } else if (event.ctrlKey && keyCode == 107) { // Ctrl++
             e.preventDefault();
             fontSize += 1;
