@@ -5,7 +5,7 @@ var apiAuth = {
 };
 var wait = localStorageGetItem("wait") || false;
 var pbUrl = "https://pb.judge0.com";
-var check_timeout = 1000;
+var check_timeout = 200;
 
 var blinkStatusLine = ((localStorageGetItem("blink") || "true") === "true");
 var editorMode = localStorageGetItem("editorMode") || "normal";
@@ -22,9 +22,6 @@ var layout;
 var sourceEditor;
 var stdinEditor;
 var stdoutEditor;
-var stderrEditor;
-var compileOutputEditor;
-var sandboxMessageEditor;
 
 var isEditorDirty = false;
 var currentLanguageId;
@@ -61,15 +58,16 @@ var layoutConfig = {
             isClosable: false,
             componentState: {
                 readOnly: false
-            }
+            },
+            width: 70
         }, {
             type: "column",
             content: [{
                 type: "stack",
                 content: [{
                     type: "component",
-                    componentName: "stdin",
-                    title: "STDIN",
+                    componentName: "input",
+                    title: "INPUT",
                     isClosable: false,
                     componentState: {
                         readOnly: false
@@ -79,37 +77,14 @@ var layoutConfig = {
                 type: "stack",
                 content: [{
                         type: "component",
-                        componentName: "stdout",
-                        title: "STDOUT",
+                        componentName: "output",
+                        title: "OUTPUT",
                         isClosable: false,
                         componentState: {
                             readOnly: true
                         }
-                    }, {
-                        type: "component",
-                        componentName: "stderr",
-                        title: "STDERR",
-                        isClosable: false,
-                        componentState: {
-                            readOnly: true
-                        }
-                    }, {
-                        type: "component",
-                        componentName: "compile output",
-                        title: "COMPILE OUTPUT",
-                        isClosable: false,
-                        componentState: {
-                            readOnly: true
-                        }
-                    }, {
-                        type: "component",
-                        componentName: "sandbox message",
-                        title: "SANDBOX MESSAGE",
-                        isClosable: false,
-                        componentState: {
-                            readOnly: true
-                        }
-                    }]
+                }],
+                height: 70
             }]
         }]
     }]
@@ -201,9 +176,7 @@ function handleResult(data) {
 
     var status = data.status;
     var stdout = decode(data.stdout);
-    var stderr = decode(data.stderr);
     var compile_output = decode(data.compile_output);
-    var sandbox_message = decode(data.message);
     var time = (data.time === null ? "-" : data.time + "s");
     var memory = (data.memory === null ? "-" : data.memory + "KB");
 
@@ -218,31 +191,11 @@ function handleResult(data) {
         }, 3000);
     }
 
-    stdoutEditor.setValue(stdout);
-    stderrEditor.setValue(stderr);
-    compileOutputEditor.setValue(compile_output);
-    sandboxMessageEditor.setValue(sandbox_message);
+    var output = [compile_output, stdout].join("\n").trim();
+    stdoutEditor.setValue(output);
 
-    if (stdout !== "") {
+    if (output !== "") {
         var dot = document.getElementById("stdout-dot");
-        if (!dot.parentElement.classList.contains("lm_active")) {
-            dot.hidden = false;
-        }
-    }
-    if (stderr !== "") {
-        var dot = document.getElementById("stderr-dot");
-        if (!dot.parentElement.classList.contains("lm_active")) {
-            dot.hidden = false;
-        }
-    }
-    if (compile_output !== "") {
-        var dot = document.getElementById("compile-output-dot");
-        if (!dot.parentElement.classList.contains("lm_active")) {
-            dot.hidden = false;
-        }
-    }
-    if (sandbox_message !== "") {
-        var dot = document.getElementById("sandbox-message-dot");
         if (!dot.parentElement.classList.contains("lm_active")) {
             dot.hidden = false;
         }
@@ -264,10 +217,6 @@ function save() {
         command_line_arguments: $commandLineArguments.val(),
         stdin: encode(stdinEditor.getValue()),
         stdout: encode(stdoutEditor.getValue()),
-        stderr: encode(stderrEditor.getValue()),
-        compile_output: encode(compileOutputEditor.getValue()),
-        sandbox_message: encode(sandboxMessageEditor.getValue()),
-        status_line: encode($statusLine.html())
     });
     var filename = "judge0-ide.json";
     var data = {
@@ -317,9 +266,6 @@ function loadSavedSource() {
                 $commandLineArguments.val(data["command_line_arguments"]);
                 stdinEditor.setValue(decode(data["stdin"]));
                 stdoutEditor.setValue(decode(data["stdout"]));
-                stderrEditor.setValue(decode(data["stderr"]));
-                compileOutputEditor.setValue(decode(data["compile_output"]));
-                sandboxMessageEditor.setValue(decode(data["message"]));
                 var time = (data.time === null ? "-" : data.time + "s");
                 var memory = (data.memory === null ? "-" : data.memory + "KB");
                 $statusLine.html(`${data.status.description}, ${time}, ${memory}`);
@@ -338,9 +284,6 @@ function loadSavedSource() {
                 $commandLineArguments.val(data["command_line_arguments"]);
                 stdinEditor.setValue(decode(data["stdin"]));
                 stdoutEditor.setValue(decode(data["stdout"]));
-                stderrEditor.setValue(decode(data["stderr"]));
-                compileOutputEditor.setValue(decode(data["compile_output"]));
-                sandboxMessageEditor.setValue(decode(data["sandbox_message"]));
                 $statusLine.html(decode(data["status_line"]));
                 changeEditorLanguage();
             },
@@ -364,14 +307,8 @@ function run() {
     }
 
     document.getElementById("stdout-dot").hidden = true;
-    document.getElementById("stderr-dot").hidden = true;
-    document.getElementById("compile-output-dot").hidden = true;
-    document.getElementById("sandbox-message-dot").hidden = true;
 
     stdoutEditor.setValue("");
-    stderrEditor.setValue("");
-    compileOutputEditor.setValue("");
-    sandboxMessageEditor.setValue("");
 
     var sourceValue = encode(sourceEditor.getValue());
     var stdinValue = encode(stdinEditor.getValue());
@@ -529,9 +466,6 @@ function editorsUpdateFontSize(fontSize) {
     sourceEditor.updateOptions({fontSize: fontSize});
     stdinEditor.updateOptions({fontSize: fontSize});
     stdoutEditor.updateOptions({fontSize: fontSize});
-    stderrEditor.updateOptions({fontSize: fontSize});
-    compileOutputEditor.updateOptions({fontSize: fontSize});
-    sandboxMessageEditor.updateOptions({fontSize: fontSize});
 }
 
 function updateScreenElements() {
@@ -672,7 +606,7 @@ $(document).ready(function () {
             sourceEditor.onDidLayoutChange(resizeEditor);
         });
 
-        layout.registerComponent("stdin", function (container, state) {
+        layout.registerComponent("input", function (container, state) {
             stdinEditor = monaco.editor.create(container.getElement()[0], {
                 automaticLayout: true,
                 theme: "vs-dark",
@@ -685,7 +619,7 @@ $(document).ready(function () {
             });
         });
 
-        layout.registerComponent("stdout", function (container, state) {
+        layout.registerComponent("output", function (container, state) {
             stdoutEditor = monaco.editor.create(container.getElement()[0], {
                 automaticLayout: true,
                 theme: "vs-dark",
@@ -699,66 +633,6 @@ $(document).ready(function () {
 
             container.on("tab", function(tab) {
                 tab.element.append("<span id=\"stdout-dot\" class=\"dot\" hidden></span>");
-                tab.element.on("mousedown", function(e) {
-                    e.target.closest(".lm_tab").children[3].hidden = true;
-                });
-            });
-        });
-
-        layout.registerComponent("stderr", function (container, state) {
-            stderrEditor = monaco.editor.create(container.getElement()[0], {
-                automaticLayout: true,
-                theme: "vs-dark",
-                scrollBeyondLastLine: false,
-                readOnly: state.readOnly,
-                language: "plaintext",
-                minimap: {
-                    enabled: false
-                }
-            });
-
-            container.on("tab", function(tab) {
-                tab.element.append("<span id=\"stderr-dot\" class=\"dot\" hidden></span>");
-                tab.element.on("mousedown", function(e) {
-                    e.target.closest(".lm_tab").children[3].hidden = true;
-                });
-            });
-        });
-
-        layout.registerComponent("compile output", function (container, state) {
-            compileOutputEditor = monaco.editor.create(container.getElement()[0], {
-                automaticLayout: true,
-                theme: "vs-dark",
-                scrollBeyondLastLine: false,
-                readOnly: state.readOnly,
-                language: "plaintext",
-                minimap: {
-                    enabled: false
-                }
-            });
-
-            container.on("tab", function(tab) {
-                tab.element.append("<span id=\"compile-output-dot\" class=\"dot\" hidden></span>");
-                tab.element.on("mousedown", function(e) {
-                    e.target.closest(".lm_tab").children[3].hidden = true;
-                });
-            });
-        });
-
-        layout.registerComponent("sandbox message", function (container, state) {
-            sandboxMessageEditor = monaco.editor.create(container.getElement()[0], {
-                automaticLayout: true,
-                theme: "vs-dark",
-                scrollBeyondLastLine: false,
-                readOnly: state.readOnly,
-                language: "plaintext",
-                minimap: {
-                    enabled: false
-                }
-            });
-
-            container.on("tab", function(tab) {
-                tab.element.append("<span id=\"sandbox-message-dot\" class=\"dot\" hidden></span>");
                 tab.element.on("mousedown", function(e) {
                     e.target.closest(".lm_tab").children[3].hidden = true;
                 });
