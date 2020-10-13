@@ -1,8 +1,11 @@
-var defaultUrl = localStorageGetItem("api-url") || "https://secure.judge0.com/standard";
-var apiUrl = defaultUrl;
+var apiUrl = "https://judge0.p.rapidapi.com";
+var apiAuth = {
+    "x-rapidapi-host": "judge0.p.rapidapi.com",
+    "x-rapidapi-key": "API_KEY"
+};
 var wait = localStorageGetItem("wait") || false;
 var pbUrl = "https://pb.judge0.com";
-var check_timeout = 200;
+var check_timeout = 1000;
 
 var blinkStatusLine = ((localStorageGetItem("blink") || "true") === "true");
 var editorMode = localStorageGetItem("editorMode") || "normal";
@@ -306,6 +309,7 @@ function loadSavedSource() {
         $.ajax({
             url: apiUrl + "/submissions/" + snippet_id + "?fields=source_code,language_id,stdin,stdout,stderr,compile_output,message,time,memory,status,compiler_options,command_line_arguments&base64_encoded=true",
             type: "GET",
+            headers: apiAuth,
             success: function(data, textStatus, jqXHR) {
                 sourceEditor.setValue(decode(data["source_code"]));
                 $selectLanguage.dropdown("set selected", data["language_id"]);
@@ -393,6 +397,7 @@ function run() {
         $.ajax({
             url: apiUrl + `/submissions?base64_encoded=true&wait=${wait}`,
             type: "POST",
+            headers: apiAuth,
             async: true,
             contentType: "application/json",
             data: JSON.stringify(data),
@@ -442,6 +447,7 @@ function fetchSubmission(submission_token) {
     $.ajax({
         url: apiUrl + "/submissions/" + submission_token + "?base64_encoded=true",
         type: "GET",
+        headers: apiAuth,
         async: true,
         success: function (data, textStatus, jqXHR) {
             if (data.status.id <= 2) { // In Queue or Processing
@@ -512,13 +518,11 @@ function changeEditorMode() {
 }
 
 function resolveLanguageId(id) {
-    id = parseInt(id);
-    return languageIdTable[id] || id;
+    return id;
 }
 
 function resolveApiUrl(id) {
-    id = parseInt(id);
-    return languageApiUrlTable[id] || defaultUrl;
+    return apiUrl;
 }
 
 function editorsUpdateFontSize(fontSize) {
@@ -617,7 +621,7 @@ $(document).ready(function () {
             alert(`Submission wait is ${wait ? "ON. Enjoy" : "OFF"}.`);
         } else if (event.ctrlKey && keyCode == 83) { // Ctrl+S
             e.preventDefault();
-            save();
+            // save();
         } else if (event.ctrlKey && keyCode == 107) { // Ctrl++
             e.preventDefault();
             fontSize += 1;
@@ -1359,48 +1363,3 @@ var fileNames = {
     1018: "Test.cs",
     1019: "script.fsx"
 };
-
-var languageIdTable = {
-    1001: 1,
-    1002: 2,
-    1003: 3,
-    1004: 4,
-    1005: 5,
-    1006: 6,
-    1007: 7,
-    1008: 8,
-    1009: 9,
-    1010: 10,
-    1011: 11,
-    1012: 12,
-    1013: 13,
-    1014: 14,
-    1015: 15,
-    1016: 16,
-    1017: 17,
-    1018: 18,
-    1019: 19
-}
-
-var extraApiUrl = "https://secure.judge0.com/extra";
-var languageApiUrlTable = {
-    1001: extraApiUrl,
-    1002: extraApiUrl,
-    1003: extraApiUrl,
-    1004: extraApiUrl,
-    1005: extraApiUrl,
-    1006: extraApiUrl,
-    1007: extraApiUrl,
-    1008: extraApiUrl,
-    1009: extraApiUrl,
-    1010: extraApiUrl,
-    1011: extraApiUrl,
-    1012: extraApiUrl,
-    1013: extraApiUrl,
-    1014: extraApiUrl,
-    1015: extraApiUrl,
-    1016: extraApiUrl,
-    1017: extraApiUrl,
-    1018: extraApiUrl,
-    1019: extraApiUrl
-}
