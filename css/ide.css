@@ -36,7 +36,7 @@ body {
 #site-navigation {
     border-radius: 0;
     margin: 0;
-    background: #1e1e1e;
+    background: #24262d;
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     height: 45px;
 }
@@ -70,13 +70,12 @@ body {
 }
 
 #navigation-message a {
-    color: #41a5f1;
+    color: #1bc977;
     font-weight: bold;
 }
 
 #site-icon {
-    width: 30px;
-    height: 30px;
+    height: 44px;
     vertical-align: middle;
 }
 
@@ -89,7 +88,7 @@ body {
 #site-header h2 {
     display: inline;
     vertical-align: middle;
-    font-family: 'Exo 2', sans-serif;
+    font-family: 'Segoe UI', 'Helvetica Neue', Helvetica, Roboto, Oxygen, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', sans-serif;
 }
 
 #site-content {
@@ -101,7 +100,7 @@ body {
 }
 
 #site-footer, #status-line, #donate-line {
-    background-color: #0E6EB8;
+    background-color: #1bc977;
     bottom: 0;
     font-family: "Droid Sans Mono", monospace, monospace, "Droid Sans Fallback";
     font-size: 13px;
@@ -112,19 +111,19 @@ body {
 }
 
 #site-footer {
-    color: #41a5f1;
+    color: #8ff0c2;
     left: 0;
     text-align: center;
     width: 100%;
 }
 
 #site-footer a {
-    color: #41a5f1;
+    color: #8ff0c2;
     font-weight: bold;
 }
 
 #site-footer a:hover {
-    color: #a0d2f8;
+    color: white;
 }
 
 #donate-line {
