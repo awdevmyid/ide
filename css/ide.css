@@ -37,8 +37,12 @@ body {
     border-radius: 0;
     margin: 0;
     background: #24262d;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 1px solid #1bc977;
     height: 45px;
+}
+
+.lm_goldenlayout {
+    background-color: #24262d;
 }
 
 #navigation-message {
@@ -88,7 +92,8 @@ body {
 #site-header h2 {
     display: inline;
     vertical-align: middle;
-    font-family: 'Segoe UI', 'Helvetica Neue', Helvetica, Roboto, Oxygen, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', sans-serif;
+    font-family: 'AmarilloUSAF';
+    font-weight: thin;
 }
 
 #site-content {

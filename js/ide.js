@@ -646,7 +646,7 @@ $(document).ready(function () {
             } else {
                 loadRandomLanguage();
             }
-            $("#site-navigation").css("border-bottom", "1px solid black");
+            $("#site-navigation").css("border-bottom", "1px solid #1bc977");
             sourceEditor.focus();
         });
 
