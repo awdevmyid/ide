@@ -92,8 +92,7 @@ body {
 #site-header h2 {
     display: inline;
     vertical-align: middle;
-    font-family: 'AmarilloUSAF';
-    font-weight: thin;
+    font-family: monospace;
 }
 
 #site-content {
