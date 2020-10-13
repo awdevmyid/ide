@@ -9,7 +9,7 @@ var check_timeout = 200;
 
 var blinkStatusLine = ((localStorageGetItem("blink") || "true") === "true");
 var editorMode = localStorageGetItem("editorMode") || "normal";
-var redirectStderrToStdout = ((localStorageGetItem("redirectStderrToStdout") || "false") === "true");
+var redirectStderrToStdout = ((localStorageGetItem("redirectStderrToStdout") || "true") === "true");
 var editorModeObject = null;
 
 var fontSize = 14;
