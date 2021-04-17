@@ -1,6 +1,6 @@
-var apiUrl = localStorageGetItem("api-url") || "https://secure.stemalica.com/standard";
+var apiUrl = localStorageGetItem("api-url") || "https://secure.judge0.com/standard";
 var wait = localStorageGetItem("wait") || false;
-var pbUrl = "https://pb.stemalica.com";
+var pbUrl = "https://pb.judge0.com";
 var check_timeout = 200;
 
 var layout;
@@ -157,9 +157,6 @@ function save() {
             "Accept": "application/json"
         },
         data: data,
-        xhrFields: {
-            withCredentials: true
-        },
         success: function (data, textStatus, jqXHR) {
             if (getIdFromURI() != data["short"]) {
                 window.history.replaceState(null, null, location.origin + location.pathname + "?" + data["short"]);
@@ -227,9 +224,6 @@ function run() {
         async: true,
         contentType: "application/json",
         data: JSON.stringify(data),
-        xhrFields: {
-            withCredentials: true
-        },
         success: function (data, textStatus, jqXHR) {
             console.log(`Your submission token is: ${data.token}`);
             if (wait == true) {
@@ -303,7 +297,7 @@ $(document).ready(function () {
             run();
         } else if (event.ctrlKey && keyCode == 83) { // Ctrl+S
             e.preventDefault();
-            save();
+            // save();
         }
     });
 
